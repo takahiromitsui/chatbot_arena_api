@@ -1,16 +1,13 @@
 from flask import Flask, request, jsonify
-from pydantic import BaseModel, ValidationError
+from pydantic import ValidationError
 
 # local
 from src.azure_factory import AzureOpenAIFactory
 from src.config import settings
 from src.response_generator import ResponseGenerator
+from src.models import UserInput
 
 app = Flask(__name__)
-
-
-class UserInput(BaseModel):
-    prompt: str
 
 
 @app.route("/")

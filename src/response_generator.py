@@ -4,14 +4,7 @@ from flask import json
 
 # local
 from src.azure_factory import AzureOpenAIFactory
-
-
-@dataclass
-class ModelResponse:
-    blind_name: str  # A or B
-    display_name: str  # e.g., gpt3
-    full_name: str  # e.g., sometech-gpt-35-turbo
-    response: str  # answer from a model
+from src.models import ModelResponse
 
 
 class ResponseGenerator:
