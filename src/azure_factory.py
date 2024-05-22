@@ -14,6 +14,7 @@ class AzureOpenAIFactory:
             "gpt4": self.settings.AZURE_MODEL_PREFIX + "-gpt4-turbo-2024-04-09",
             "gpt4-se": self.settings.AZURE_MODEL_PREFIX + "-gpt4-1106-se",
         }
+        # this variable could be used for actual database storage
         self.scores = {
             self.models["gpt3"]: 0,
             self.models["gpt4"]: 0,
@@ -36,6 +37,7 @@ class AzureOpenAIFactory:
             models.append(model)
         return models
 
+    # this method could be used for actual database storage
     def update_scores(
         self, model_responses: list[ModelResponse], user_feedback: Feedback
     ):
@@ -55,6 +57,7 @@ class AzureOpenAIFactory:
         else:
             raise ValueError("Invalid feedback")
 
+    # this method could be used for actual database storage
     def get_scores(self):
         return self.scores
 

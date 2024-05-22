@@ -26,3 +26,8 @@ class ModelResponse:
 
 class UserInput(BaseModel):
     prompt: str
+
+
+class UpdateScoresInput(BaseModel):
+    model_responses: list[ModelResponse]
+    user_feedback: Literal["A", "B", "tie", "bad"]
