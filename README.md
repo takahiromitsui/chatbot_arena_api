@@ -49,6 +49,12 @@ This application uses several classes, which are defined in separate files:
 | :-------- | :------- | :------------------------- |
 | `prompt` | `string` | **Required**. The prompt for the randomly selected two AI models to generate a response |
 
+Example:
+![generate_1](https://github.com/takahiromitsui/chatbot_arena_api/assets/78789212/2f9c63f5-f0e9-454a-9fa3-89c7105a9958)
+![generate_2](https://github.com/takahiromitsui/chatbot_arena_api/assets/78789212/e7cd23f3-22f5-4218-b05b-462d9806329f)
+
+Two models are randomly picked.
+
 #### Provide Feedback
 
 ```http
@@ -64,13 +70,24 @@ This application uses several classes, which are defined in separate files:
 
 Please note that the /generate and /feedback routes accept JSON data in the request body. The model_responses parameter for the /feedback route is a list of objects, each with a blind_name and full_name property. The user_feedback parameter is a string that represents the user's feedback on the responses.
 
+Example:
+
+![feedback1](https://github.com/takahiromitsui/chatbot_arena_api/assets/78789212/b45f8515-6f75-4eb2-b286-dbb19d5c67a2)
+![feedback](https://github.com/takahiromitsui/chatbot_arena_api/assets/78789212/6106d10f-8bc6-41fc-a49f-f4ac9d246ff7)
+
+
 #### Get Scores
 
 ```http
   GET /scores
 ```
 
-No parameters required. Returns the current scores for the models.
+No parameters are required. Returns the current scores for the models.
 
 This route returns a JSON object with the scores for each model. The keys in the object are the names of the models, and the values are the scores. The scores are updated based on user feedback.
 
+Example:
+
+![scores](https://github.com/takahiromitsui/chatbot_arena_api/assets/78789212/0fbd0658-a30e-4bc9-8b8c-5978e118517b)
+
+A user picked model A in the feedback(see the first example of feedback). Model A was gpt3; therefore, gpt3 got one point.
