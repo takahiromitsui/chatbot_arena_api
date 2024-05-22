@@ -1,16 +1,9 @@
-from dataclasses import dataclass
 import random
 from openai import AsyncAzureOpenAI
 
 # local
 from src.config import Settings
-
-
-@dataclass
-class Model:
-    blind_name: str  # A or B
-    display_name: str  # e.g., gpt3
-    full_name: str  # e.g., sometech-gpt-35-turbo
+from src.models import Model, Feedback, ModelResponse
 
 
 class AzureOpenAIFactory:
@@ -20,6 +13,11 @@ class AzureOpenAIFactory:
             "gpt3": self.settings.AZURE_MODEL_PREFIX + "-gpt-35-turbo",
             "gpt4": self.settings.AZURE_MODEL_PREFIX + "-gpt4-turbo-2024-04-09",
             "gpt4-se": self.settings.AZURE_MODEL_PREFIX + "-gpt4-1106-se",
+        }
+        self.scores = {
+            self.models["gpt3"]: 0,
+            self.models["gpt4"]: 0,
+            self.models["gpt4-se"]: 0,
         }
 
     def create(self):
@@ -38,6 +36,28 @@ class AzureOpenAIFactory:
             models.append(model)
         return models
 
+    def update_scores(
+        self, model_responses: list[ModelResponse], user_feedback: Feedback
+    ):
+        res = {}
+        for model_response in model_responses:
+            res[model_response.blind_name] = model_response.full_name
+
+        if user_feedback.user_feedback == "A":
+            self.scores[res.get("A", "")] = self.scores.get(res.get("A", ""), 0) + 1
+        elif user_feedback.user_feedback == "B":
+            self.scores[res.get("B", "")] = self.scores.get(res.get("B", ""), 0) + 1
+        elif user_feedback.user_feedback == "tie":
+            pass  # No need to do anything if it's a tie
+        elif user_feedback.user_feedback == "bad":
+            self.scores[res.get("A", "")] = self.scores.get(res.get("A", ""), 0) - 1
+            self.scores[res.get("B", "")] = self.scores.get(res.get("B", ""), 0) - 1
+        else:
+            raise ValueError("Invalid feedback")
+
+    def get_scores(self):
+        return self.scores
+
 
 if __name__ == "__main__":
     # poetry run python -m src.azure_factory
@@ -51,3 +71,12 @@ if __name__ == "__main__":
     client = factory.create()
     random_two_models = factory.pick_two_random_models()
     print(random_two_models)
+    print(factory.get_scores())
+    factory.update_scores(
+        [
+            ModelResponse("A", "gpt3", "sometech-gpt-35-turbo", "response"),
+            ModelResponse("B", "gpt4", "sometech-gpt4-turbo-2024-04-09", "response"),
+        ],
+        Feedback("A"),
+    )
+    print(factory.get_scores())
